@@ -1,0 +1,6 @@
+outs:
+- md5: 526adc2e2d3048debf3fba8b0aa93071.dir
+  size: 2890054
+  nfiles: 401
+  hash: md5
+  path: bird

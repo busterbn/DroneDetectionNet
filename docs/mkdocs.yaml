@@ -1,0 +1,255 @@
+# =============================================================================
+# Drone Detector MLOps Documentation
+# MkDocs Configuration with Material Theme
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Site Metadata
+# -----------------------------------------------------------------------------
+site_name: "Drone Detector MLOps"
+site_description: "Machine Learning Operations documentation for the Drone Detector project - training, deployment, monitoring, and infrastructure."
+site_author: dtu-mlops
+docs_dir: source
+
+# Uncomment and set if you have a deployed URL:
+# site_url: https://your-domain.com/drone-detector-mlops/
+
+# Repository information (uncomment if using GitHub)
+# repo_name: dtu-mlops/drone-detector
+# repo_url: https://github.com/dtu-mlops/drone-detection-mlops/
+# edit_uri: edit/main/docs/source/
+
+# -----------------------------------------------------------------------------
+# Theme Configuration - Material for MkDocs
+# -----------------------------------------------------------------------------
+theme:
+  name: material
+  language: en
+
+  # Color palette with light/dark mode toggle
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  # Typography
+  font:
+    text: Inter
+    code: Roboto Mono
+
+  # Logo and favicon
+  icon:
+    logo: material/drone
+    repo: fontawesome/brands/github
+
+  # Navigation features
+  features:
+    # Navigation
+    - navigation.tabs           # Top-level sections as tabs
+    - navigation.tabs.sticky    # Tabs stay visible when scrolling
+    - navigation.sections       # Render sections as groups
+    - navigation.expand         # Expand all sections by default
+    - navigation.path           # Breadcrumb navigation
+    - navigation.top            # Back-to-top button
+    - navigation.footer         # Previous/next page links in footer
+    - navigation.indexes        # Section index pages
+
+    # Search
+    - search.suggest            # Search suggestions
+    - search.highlight          # Highlight search terms
+    - search.share              # Share search results
+
+    # Content
+    - content.code.copy         # Copy button for code blocks
+    - content.code.annotate     # Code annotations
+    - content.tabs.link         # Link content tabs
+    - content.tooltips          # Enhanced tooltips
+
+    # Table of contents
+    - toc.follow                # TOC follows scroll position
+
+# -----------------------------------------------------------------------------
+# Navigation Structure
+# -----------------------------------------------------------------------------
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - User Guide:
+    - Training Models: training.md
+    - Cloud Infrastructure: cloud-infrastructure.md
+    - Deployment: deployment.md
+    - Monitoring & Drift: monitoring.md
+  - API Reference: api-reference.md
+
+# -----------------------------------------------------------------------------
+# Plugins
+# -----------------------------------------------------------------------------
+plugins:
+  # Search plugin with enhanced settings
+  - search:
+      lang: en
+      separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
+
+  # API documentation from docstrings
+  - mkdocstrings:
+      enabled: !ENV [ENABLE_MKDOCSTRINGS, true]
+      default_handler: python
+      handlers:
+        python:
+          paths: ["../src"]
+          import:
+            - https://docs.python.org/3/objects.inv
+          options:
+            # General
+            show_root_heading: true
+            show_root_full_path: false
+            show_category_heading: true
+
+            # Members
+            members_order: source
+            group_by_category: true
+            show_submodules: true
+
+            # Docstrings
+            docstring_style: google
+            docstring_section_style: spacy
+            merge_init_into_class: true
+            show_if_no_docstring: false
+
+            # Signatures
+            separate_signature: true
+            show_signature_annotations: true
+            signature_crossrefs: true
+
+            # Source
+            show_source: true
+
+# -----------------------------------------------------------------------------
+# Markdown Extensions
+# -----------------------------------------------------------------------------
+markdown_extensions:
+  # Python Markdown Extensions
+  - abbr                        # Abbreviations
+  - admonition                  # Callout blocks (note, warning, etc.)
+  - attr_list                   # Add HTML attributes to elements
+  - def_list                    # Definition lists
+  - footnotes                   # Footnotes support
+  - md_in_html                  # Markdown inside HTML
+  - tables                      # Tables support
+  - toc:                        # Table of contents
+      permalink: true           # Add permalink anchors
+      permalink_title: "Anchor link to this section"
+      toc_depth: 3              # Depth of TOC
+
+  # PyMdown Extensions - Code
+  - pymdownx.highlight:         # Syntax highlighting
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+      auto_title: true
+  - pymdownx.inlinehilite       # Inline code highlighting
+  - pymdownx.snippets:          # Include external files
+      auto_append:
+        - source/includes/abbreviations.md
+      check_paths: false
+  - pymdownx.superfences:       # Fenced code blocks + diagrams
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+  # PyMdown Extensions - Content
+  - pymdownx.tabbed:            # Content tabs
+      alternate_style: true
+      combine_header_slug: true
+  - pymdownx.details            # Collapsible blocks
+  - pymdownx.critic             # Critic markup (track changes)
+  - pymdownx.caret              # Insert/superscript (^^insert^^, ^sup^)
+  - pymdownx.mark               # Highlight text (==highlight==)
+  - pymdownx.tilde              # Delete/subscript (~~delete~~, ~sub~)
+  - pymdownx.keys               # Keyboard keys (++ctrl+alt+del++)
+
+  # PyMdown Extensions - Lists & Tasks
+  - pymdownx.tasklist:          # Task lists with checkboxes
+      custom_checkbox: true
+      clickable_checkbox: false
+
+  # PyMdown Extensions - Icons & Emojis
+  - pymdownx.emoji:             # Emoji support
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+  # PyMdown Extensions - Math (uncomment if needed)
+  # - pymdownx.arithmatex:
+  #     generic: true
+
+  # PyMdown Extensions - Smart Symbols
+  - pymdownx.smartsymbols       # Smart symbols (tm, c, r, arrows, etc.)
+  - pymdownx.betterem:          # Better emphasis handling
+      smart_enable: all
+
+# -----------------------------------------------------------------------------
+# Extra Configuration
+# -----------------------------------------------------------------------------
+extra:
+  # Social links (shown in footer)
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/dtu-mlops
+      name: DTU MLOps on GitHub
+
+  # Analytics (uncomment and configure if needed)
+  # analytics:
+  #   provider: google
+  #   property: G-XXXXXXXXXX
+
+  # Version provider (for versioned docs)
+  # version:
+  #   provider: mike
+
+  # Consent for cookies (GDPR compliance)
+  # consent:
+  #   title: Cookie consent
+  #   description: >-
+  #     We use cookies to recognize your repeated visits and preferences.
+  #     With your consent, you help us improve our documentation.
+
+# -----------------------------------------------------------------------------
+# Extra CSS & JavaScript
+# -----------------------------------------------------------------------------
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js
+  # MathJax support (uncomment if using math)
+  # - javascripts/mathjax.js
+  # - https://polyfill.io/v3/polyfill.min.js?features=es6
+  # - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+# -----------------------------------------------------------------------------
+# Build Configuration
+# -----------------------------------------------------------------------------
+strict: false  # Set to true for strict mode (fail on warnings)
+
+# Validation settings
+validation:
+  nav:
+    omitted_files: info
+    not_found: warn
+  links:
+    not_found: info

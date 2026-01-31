@@ -1,0 +1,27 @@
+{
+  "generated_at": "2026-01-21T13:14:01.323000+00:00",
+  "split": "train",
+  "total_samples": 543,
+  "class_distribution": {
+    "bird": 277,
+    "drone": 266
+  },
+  "feature_names": [
+    "brightness_mean",
+    "brightness_std",
+    "contrast",
+    "sharpness",
+    "r_mean",
+    "g_mean",
+    "b_mean",
+    "r_std",
+    "g_std",
+    "b_std",
+    "saturation_mean",
+    "value_mean",
+    "edge_density",
+    "aspect_ratio",
+    "size_pixels"
+  ],
+  "data_dir": "data"
+}

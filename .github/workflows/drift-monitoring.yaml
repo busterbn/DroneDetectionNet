@@ -1,0 +1,140 @@
+name: Drift Monitoring
+
+# Run drift checks on a schedule or manually
+on:
+  schedule:
+    # Run daily at 9 AM UTC
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+    inputs:
+      max_predictions:
+        description: 'Number of recent predictions to analyze'
+        required: false
+        default: '100'
+
+env:
+  PROJECT_ID: drone-detection-mlops
+  REGION: europe-west4
+
+jobs:
+  check-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Download reference dataset from GCS
+        run: |
+          gcloud storage cp gs://drone-detection-mlops-data/monitoring/reference_dataset.csv data/reference_dataset.csv || \
+          echo "Reference dataset not found in GCS, using local version"
+
+      - name: Run comprehensive drift analysis
+        id: drift
+        run: |
+          # Run comprehensive drift detection using Python API
+          MAX_PRED="${{ github.event.inputs.max_predictions || '100' }}"
+
+          uv run python -c "
+          from drone_detector_mlops.monitoring import DriftDetector
+          import json
+          import sys
+
+          try:
+              detector = DriftDetector()
+              # Run comprehensive analysis across all levels
+              results = detector.run_comprehensive_drift_analysis(max_predictions=int('$MAX_PRED'))
+
+              print('=== Comprehensive Drift Analysis ===')
+              print(f'Reference samples: {results[\"reference_samples\"]}')
+              print(f'Current samples: {results[\"current_samples\"]}')
+              print(f'Overall severity: {results[\"overall_assessment\"][\"severity\"]}')
+              print(f'Requires action: {results[\"overall_assessment\"][\"requires_action\"]}')
+
+              # Print alerts
+              if results['overall_assessment']['alerts']:
+                  print('\\nAlerts:')
+                  for alert in results['overall_assessment']['alerts']:
+                      print(f'  - {alert}')
+
+              # Save results for GitHub Actions
+              with open('drift_results.json', 'w') as f:
+                  json.dump(results, f, indent=2)
+
+              # Exit with error code if action required
+              sys.exit(1 if results['overall_assessment']['requires_action'] else 0)
+
+          except ValueError as e:
+              if 'No current data' in str(e):
+                  print('⚠️ No production data available yet - skipping drift check')
+                  sys.exit(0)
+              raise
+          except Exception as e:
+              print(f'❌ Drift check failed: {e}')
+              sys.exit(1)
+          "
+
+      - name: Generate drift report on failure
+        if: failure()
+        run: |
+          uv run python -c "
+          from drone_detector_mlops.monitoring import DriftDetector
+
+          detector = DriftDetector()
+          detector.generate_drift_report(
+              max_predictions=100,
+              output_path='drift_report.html'
+          )
+          print('Drift report generated: drift_report.html')
+          "
+
+      - name: Upload drift report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: drift-report
+          path: drift_report.html
+          retention-days: 30
+
+      - name: Comment on failure
+        if: failure()
+        run: |
+          echo "⚠️ **Data Drift Detected!**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Comprehensive drift analysis has detected significant changes in production data." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Parse and display drift results
+          if [ -f drift_results.json ]; then
+            echo "**Analysis Details:**" >> $GITHUB_STEP_SUMMARY
+            cat drift_results.json | jq -r '.overall_assessment | "- Severity: \(.severity)\n- Requires Action: \(.requires_action)"' >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            echo "**Recommended Actions:**" >> $GITHUB_STEP_SUMMARY
+            cat drift_results.json | jq -r '.overall_assessment.recommended_actions[] | "- \(.)"' >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Monitoring Levels:**" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Prediction-level: Confidence scores & class distribution (Most Important)" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Image-level: Brightness, colors, etc. (Supplementary)" >> $GITHUB_STEP_SUMMARY
+          echo "📊 Download the drift report artifact for detailed visualizations" >> $GITHUB_STEP_SUMMARY
+
+      - name: Success message
+        if: success()
+        run: |
+          echo "✅ **No drift detected**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Production data distribution matches the reference dataset." >> $GITHUB_STEP_SUMMARY

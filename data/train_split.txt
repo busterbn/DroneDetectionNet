@@ -1,0 +1,1 @@
+/Users/rasmus/DTU/MLOps/data/splits/train_files.txt

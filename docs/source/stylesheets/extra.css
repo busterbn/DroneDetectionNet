@@ -1,0 +1,229 @@
+/* =============================================================================
+   Drone Detector MLOps - Custom Styles
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   Root Variables - Custom Color Overrides
+   ----------------------------------------------------------------------------- */
+:root {
+  /* Primary colors - can be customized */
+  --md-primary-fg-color--light: #5c6bc0;
+  --md-primary-fg-color--dark: #3949ab;
+
+  /* Code block improvements */
+  --md-code-bg-color: #f5f5f5;
+  --md-code-fg-color: #37474f;
+}
+
+/* Dark mode overrides */
+[data-md-color-scheme="slate"] {
+  --md-code-bg-color: #1e1e1e;
+  --md-code-fg-color: #e0e0e0;
+}
+
+/* -----------------------------------------------------------------------------
+   Typography Enhancements
+   ----------------------------------------------------------------------------- */
+
+/* Improve readability of main content */
+.md-typeset {
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+/* Better heading spacing */
+.md-typeset h1 {
+  font-weight: 700;
+  margin-top: 0;
+}
+
+.md-typeset h2 {
+  font-weight: 600;
+  margin-top: 1.5em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-typeset h3 {
+  font-weight: 600;
+}
+
+/* -----------------------------------------------------------------------------
+   Code Block Styling
+   ----------------------------------------------------------------------------- */
+
+/* Better code block appearance */
+.md-typeset pre > code {
+  font-size: 0.8rem;
+  border-radius: 6px;
+}
+
+/* Code annotation styling */
+.md-typeset .md-annotation {
+  font-size: 0.75rem;
+}
+
+/* Inline code styling */
+.md-typeset code {
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+/* -----------------------------------------------------------------------------
+   Navigation Improvements
+   ----------------------------------------------------------------------------- */
+
+/* Sticky header with subtle shadow */
+.md-header {
+  box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.1), 0 0.2rem 0.4rem rgba(0, 0, 0, 0.2);
+}
+
+/* Better nav item spacing */
+.md-nav__item {
+  padding: 0.1rem 0;
+}
+
+/* Active nav item highlight */
+.md-nav__link--active {
+  font-weight: 600;
+}
+
+/* -----------------------------------------------------------------------------
+   Admonition Customization
+   ----------------------------------------------------------------------------- */
+
+/* Rounded corners for admonitions */
+.md-typeset .admonition,
+.md-typeset details {
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Admonition title styling */
+.md-typeset .admonition-title,
+.md-typeset summary {
+  border-radius: 6px 6px 0 0;
+}
+
+/* -----------------------------------------------------------------------------
+   Table Styling
+   ----------------------------------------------------------------------------- */
+
+/* Better table appearance */
+.md-typeset table:not([class]) {
+  font-size: 0.8rem;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.md-typeset table:not([class]) th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+/* Zebra striping for tables */
+.md-typeset table:not([class]) tr:nth-child(even) {
+  background-color: var(--md-default-fg-color--lightest);
+}
+
+/* -----------------------------------------------------------------------------
+   Content Tabs Styling
+   ----------------------------------------------------------------------------- */
+
+/* Tab styling improvements */
+.md-typeset .tabbed-labels > label {
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+/* -----------------------------------------------------------------------------
+   Task List Styling
+   ----------------------------------------------------------------------------- */
+
+/* Custom checkbox styling */
+.md-typeset .task-list-item [type="checkbox"] {
+  transform: scale(1.1);
+}
+
+/* -----------------------------------------------------------------------------
+   Footer Styling
+   ----------------------------------------------------------------------------- */
+
+/* Footer improvements */
+.md-footer {
+  margin-top: 2rem;
+}
+
+.md-footer-meta {
+  padding: 1rem 0;
+}
+
+/* -----------------------------------------------------------------------------
+   Search Styling
+   ----------------------------------------------------------------------------- */
+
+/* Search result improvements */
+.md-search-result__article {
+  padding: 0.8rem 1rem;
+}
+
+/* -----------------------------------------------------------------------------
+   Mermaid Diagram Styling
+   ----------------------------------------------------------------------------- */
+
+/* Center mermaid diagrams */
+.mermaid {
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+/* -----------------------------------------------------------------------------
+   Print Styles
+   ----------------------------------------------------------------------------- */
+
+@media print {
+  .md-header,
+  .md-footer,
+  .md-sidebar {
+    display: none;
+  }
+
+  .md-content {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   Responsive Adjustments
+   ----------------------------------------------------------------------------- */
+
+@media screen and (max-width: 76.1875em) {
+  .md-typeset {
+    font-size: 0.8rem;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   Animation & Transitions
+   ----------------------------------------------------------------------------- */
+
+/* Smooth transitions for interactive elements */
+.md-nav__link,
+.md-tabs__link,
+.md-typeset a {
+  transition: color 0.15s ease-in-out;
+}
+
+/* Button hover effects */
+.md-button {
+  transition: background-color 0.15s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.md-button:hover {
+  transform: translateY(-1px);
+}
