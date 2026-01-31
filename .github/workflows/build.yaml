@@ -24,7 +24,7 @@ jobs:
       train: ${{ steps.filter.outputs.train }}
       api: ${{ steps.filter.outputs.api }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -45,7 +45,7 @@ jobs:
     if: needs.detect-changes.outputs.train == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Build train image
         run: docker build -f dockerfiles/train.dockerfile -t train:${{ github.sha }} .
 
@@ -54,6 +54,6 @@ jobs:
     if: needs.detect-changes.outputs.api == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Build api image
         run: docker build -f dockerfiles/api.dockerfile -t api:${{ github.sha }} .
